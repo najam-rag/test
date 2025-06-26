@@ -60,7 +60,6 @@ if query:
     st.write("### 📚 Source Snippets")
     for i, doc in enumerate(result["source_documents"][:2]):
         page = doc.metadata.get("page", "N/A")
-        preview = doc.page_content.strip().replace("
-", " ")[:500]
+        preview = doc.page_content.strip().replace("\n", " ")[:500]
         st.markdown(f"**📄 Source {i+1} — Page {page}**")
         st.code(f"{preview}...", language="text")
