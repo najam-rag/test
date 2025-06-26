@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import hashlib
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -27,23 +28,32 @@ if not uploaded_file:
     st.stop()
 
 @st.cache_resource
-def load_vectorstore(pdf_path: str):
-    loader = PyPDFLoader(pdf_path)
-    docs = loader.load()
-
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    chunks = splitter.split_documents(docs)
-
+def load_vectorstore_with_cache(pdf_bytes: bytes):
+    pdf_hash = hashlib.md5(pdf_bytes).hexdigest()
+    vectorstore_dir = f"vectorstores/{pdf_hash}"
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-    db = FAISS.from_documents(chunks, embeddings)
+
+    if os.path.exists(vectorstore_dir):
+        db = FAISS.load_local(vectorstore_dir, embeddings)
+    else:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+            tmp_file.write(pdf_bytes)
+            temp_pdf_path = tmp_file.name
+
+        loader = PyPDFLoader(temp_pdf_path)
+        docs = loader.load()
+
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        chunks = splitter.split_documents(docs)
+
+        db = FAISS.from_documents(chunks, embeddings)
+        db.save_local(vectorstore_dir)
+
     return db.as_retriever()
 
-# === Load uploaded file ===
-with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-    tmp_file.write(uploaded_file.read())
-    temp_pdf_path = tmp_file.name
-
-retriever = load_vectorstore(temp_pdf_path)
+# === Process uploaded file with caching ===
+pdf_bytes = uploaded_file.read()
+retriever = load_vectorstore_with_cache(pdf_bytes)
 st.success("✅ Custom PDF loaded successfully.")
 
 # === Build QA Chain ===
