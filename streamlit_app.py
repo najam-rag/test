@@ -61,5 +61,12 @@ if query:
     for i, doc in enumerate(result["source_documents"][:2]):
         page = doc.metadata.get("page", "N/A")
         preview = doc.page_content.strip().replace("\\n", " ")[:500]
-        st.markdown(f"**📄 Source {i+1} — Page {page}**")
+
+        # Try to extract clause number from text using regex
+        import re
+        clause_match = re.search(r"(Clause\s*\d+(\.\d+)+)", preview)
+        clause_info = clause_match.group(1) if clause_match else "Clause not found"
+
+        st.markdown(f"**📄 Source {i+1} — Page {page}, {clause_info}**")
         st.code(f"{preview}...", language="text")
+
