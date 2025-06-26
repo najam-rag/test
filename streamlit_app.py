@@ -1,4 +1,3 @@
-streamlit_code = """
 import streamlit as st
 import os
 from langchain_community.document_loaders import PyPDFLoader
@@ -16,11 +15,8 @@ st.set_page_config(page_title="AS3000 Code Assistant", layout="wide")
 st.title("⚡ AS3000 & Standards Code Assistant")
 st.caption("Ask code-related questions. Upload your own standard (PDF), such as AS3000, NCC, or SIRs.")
 
-# === Google Drive Link ===
-# === File Upload Section ===
+# === Google Drive link for user file upload ===
 st.markdown("[📁 Click here to open your Google Drive folder](https://drive.google.com/drive/folders/1vp64NKAKz6uyE_7G-pxxbL8en2IpuiJb?ths=true)")
-uploaded_file = st.file_uploader("📎 Upload your own PDF", type="pdf")
-
 
 # === File Upload Section ===
 uploaded_file = st.file_uploader("📎 Upload your own PDF", type="pdf")
@@ -67,4 +63,3 @@ if query:
         preview = doc.page_content.strip().replace("\\n", " ")[:500]
         st.markdown(f"**📄 Source {i+1} — Page {page}**")
         st.code(f"{preview}...", language="text")
-"""
