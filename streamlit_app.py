@@ -101,14 +101,26 @@ if query:
     st.write("### 🔍 Answer")
     st.success(result["result"])
 
-    st.write("### 📚 Source Snippets")
+        st.write("### 📚 Source Snippets")
     for i, doc in enumerate(result["source_documents"][:2]):
         page = doc.metadata.get("page", "N/A")
-        preview = doc.page_content.strip().replace("\\n", " ")[:500]
+        preview = doc.page_content.strip().replace("\n", " ")[:500]
 
-        # Try to extract clause number from text using regex
-        clause_match = re.search(r"(Clause\s*\d[\d\s\.]*\d)", preview)
-        clause_info = clause_match.group(1) if clause_match else "Clause not found"
+        # Enhanced clause extraction using multiple regex patterns
+        def extract_clause(text):
+            patterns = [
+                r"(Clause\s*\d{1,2}\.\d{1,2}(?:\.\d{1,2})?)",     # Clause 2.9.4.1
+                r"(\d{1,2}\.\d{1,2}(?:\.\d{1,2})?)",              # 2.9.4.1 (no Clause)
+                r"(Clause\s*\d{1,2}\.\d{1,2}[a-zA-Z]?)",          # Clause 1.6.2a
+                r"(Clause\s*\d{1,2})",                            # Clause 12
+            ]
+            for pattern in patterns:
+                match = re.search(pattern, text)
+                if match:
+                    return match.group(1)
+            return "Clause not found"
+
+        clause_info = extract_clause(preview)
 
         st.markdown(f"**📄 Source {i+1} — Page {page}, {clause_info}**")
         st.code(f"{preview}...", language="text")
