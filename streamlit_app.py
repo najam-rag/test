@@ -10,6 +10,11 @@ from langchain.chains import RetrievalQA
 import tempfile
 import re
 
+# === NEW OCR Libraries ===
+from pdf2image import convert_from_path
+import pytesseract
+from langchain.schema import Document
+
 # === Load OpenAI API Key from Streamlit secrets ===
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
@@ -41,7 +46,16 @@ def load_vectorstore_with_cache(pdf_bytes: bytes):
             temp_pdf_path = tmp_file.name
 
         loader = PyPDFLoader(temp_pdf_path)
-        docs = loader.load()
+        try:
+            docs = loader.load()
+        except Exception:
+            docs = []
+
+        if not docs:
+            st.warning("⚠️ No extractable text found. Using OCR to read scanned PDF...")
+            images = convert_from_path(temp_pdf_path)
+            texts = [pytesseract.image_to_string(img) for img in images]
+            docs = [Document(page_content=t, metadata={"page": i + 1}) for i, t in enumerate(texts)]
 
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         chunks = splitter.split_documents(docs)
