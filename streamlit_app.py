@@ -19,7 +19,7 @@ from langchain.schema import Document
 st.sidebar.header("🔐 Login")
 password = st.sidebar.text_input("Enter password", type="password")
 
-if password != "yourStrongPassword":
+if password != "Password":
     st.warning("🚫 Access denied. Please enter the correct password.")
     st.stop()
 
