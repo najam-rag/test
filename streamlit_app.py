@@ -17,13 +17,10 @@ st.title("⚡ AS3000 & Standards Code Assistant")
 st.caption("Ask code-related questions. Upload your own standard (PDF), such as AS3000, NCC, or SIRs.")
 
 # === Google Drive Link ===
-st.markdown(
-    '''
-    📂 **Manage your PDFs on Google Drive:**  
-    [Click here to open your Google Drive folder](https://drive.google.com/drive/folders/1vp64NKAKz6uyE_7G-pxxbL8en2IpuiJb?ths=true)  
-    Upload or organize your files there and return to upload them below.
-    '''
-)
+# === File Upload Section ===
+st.markdown("[📁 Click here to open your Google Drive folder](https://drive.google.com/drive/folders/1vp64NKAKz6uyE_7G-pxxbL8en2IpuiJb?ths=true)")
+uploaded_file = st.file_uploader("📎 Upload your own PDF", type="pdf")
+
 
 # === File Upload Section ===
 uploaded_file = st.file_uploader("📎 Upload your own PDF", type="pdf")
