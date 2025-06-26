@@ -15,6 +15,14 @@ from pdf2image import convert_from_path
 import pytesseract
 from langchain.schema import Document
 
+# ✅ Add password check here
+st.sidebar.header("🔐 Login")
+password = st.sidebar.text_input("Enter password", type="password")
+
+if password != "yourStrongPassword":
+    st.warning("🚫 Access denied. Please enter the correct password.")
+    st.stop()
+
 # === Load OpenAI API Key from Streamlit secrets ===
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
