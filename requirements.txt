@@ -6,3 +6,7 @@ langchain-openai
 python-dotenv
 pypdf
 faiss-cpu
+pdf2image
+pytesseract
+poppler-utils
+
