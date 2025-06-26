@@ -18,8 +18,8 @@ from langchain.schema import Document
 # === Load OpenAI API Key from Streamlit secrets ===
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
-st.set_page_config(page_title="AS3000 Code Assistant", layout="wide")
-st.title("⚡ AS3000 & Standards Code Assistant")
+st.set_page_config(page_title="Code Assistant", layout="wide")
+st.title("⚡ Codes & Standards Assistant")
 st.caption("Ask code-related questions. Upload your own standard (PDF), such as AS3000, NCC, or SIRs.")
 
 # === Optional Google Drive link ===
