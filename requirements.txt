@@ -9,4 +9,4 @@ faiss-cpu
 pdf2image
 pytesseract
 poppler-utils
-
+fpdf
