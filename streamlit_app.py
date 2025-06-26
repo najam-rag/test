@@ -38,9 +38,15 @@ def load_vectorstore_with_cache(pdf_bytes: bytes):
     vectorstore_dir = f"vectorstores/{pdf_hash}"
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
+    db = None
     if os.path.exists(vectorstore_dir):
-        db = FAISS.load_local(vectorstore_dir, embeddings)
-    else:
+        try:
+            db = FAISS.load_local(vectorstore_dir, embeddings)
+        except Exception:
+            st.warning("⚠️ Existing vectorstore seems corrupted or incompatible. Rebuilding...")
+            os.system(f"rm -rf {vectorstore_dir}")  # Delete corrupted store
+
+    if db is None:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
             tmp_file.write(pdf_bytes)
             temp_pdf_path = tmp_file.name
@@ -59,6 +65,9 @@ def load_vectorstore_with_cache(pdf_bytes: bytes):
 
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         chunks = splitter.split_documents(docs)
+
+        if not chunks:
+            raise ValueError("❌ No text could be extracted from the PDF (even with OCR). Please check your file format.")
 
         # ✅ Better handling (no crash)
         if not chunks:
