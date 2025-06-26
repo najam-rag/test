@@ -101,7 +101,7 @@ if query:
     st.write("### 🔍 Answer")
     st.success(result["result"])
 
-st.write("### 📚 Source Snippets")
+    st.write("### 📚 Source Snippets")
     for i, doc in enumerate(result["source_documents"][:2]):
         page = doc.metadata.get("page", "N/A")
         preview = doc.page_content.strip().replace("\n", " ")[:500]
