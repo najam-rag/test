@@ -60,6 +60,10 @@ def load_vectorstore_with_cache(pdf_bytes: bytes):
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         chunks = splitter.split_documents(docs)
 
+         # ✅ ADD THIS SAFETY CHECK
+        if not chunks:
+            raise ValueError("❌ No text could be extracted from the PDF (even with OCR). Please check your file format.")
+      
         db = FAISS.from_documents(chunks, embeddings)
         db.save_local(vectorstore_dir)
 
