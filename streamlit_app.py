@@ -7,6 +7,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 import tempfile
+import re
 
 # === Load OpenAI API Key from Streamlit secrets ===
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -63,10 +64,8 @@ if query:
         preview = doc.page_content.strip().replace("\\n", " ")[:500]
 
         # Try to extract clause number from text using regex
-        import re
-        clause_match = re.search(r"(Clause\s*\d+(\.\d+)+)", preview)
+        clause_match = re.search(r"(Clause\\s*\\d+(?:\\.\\d+)+)", preview)
         clause_info = clause_match.group(1) if clause_match else "Clause not found"
 
         st.markdown(f"**📄 Source {i+1} — Page {page}, {clause_info}**")
         st.code(f"{preview}...", language="text")
-
