@@ -15,7 +15,7 @@ st.set_page_config(page_title="AS3000 Code Assistant", layout="wide")
 st.title("⚡ AS3000 & Standards Code Assistant")
 st.caption("Ask code-related questions. Upload your own standard (PDF), such as AS3000, NCC, or SIRs.")
 
-# === Google Drive link for user file upload ===
+# === Optional Google Drive link ===
 st.markdown("[📁 Click here to open your Google Drive folder](https://drive.google.com/drive/folders/1vp64NKAKz6uyE_7G-pxxbL8en2IpuiJb?ths=true)")
 
 # === File Upload Section ===
