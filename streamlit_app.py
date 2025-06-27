@@ -28,6 +28,7 @@ OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="Code Assistant", layout="wide")
 st.title("⚡ Codes & Standards Assistant")
+st.markdown("⚠️ _This tool offers interpretations based on the AS3000 Wiring Rules. It is not a substitute for the official standard. Please refer to Standards Australia for the full legal document._")
 st.caption("Ask code-related questions. Upload your own standard (PDF), such as AS3000, NCC, or SIRs.")
 
 # === Optional Google Drive link ===
