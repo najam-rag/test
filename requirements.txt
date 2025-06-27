@@ -13,3 +13,4 @@ pymupdf
 pillow
 fpdf
 pytesseract
+rank_bm25>=0.2.1
